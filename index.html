@@ -99,13 +99,52 @@
         #redirect-screen p {
             color: #191a14;
         }
+
+        /* --- Flèches animées en haut à droite --- */
+        .arrow-container {
+            position: fixed;
+            top: 10px;
+            right: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            z-index: 1200;
+            pointer-events: none;
+        }
+
+        .arrow {
+            width: 18px;
+            height: 18px;
+            border-right: 3px solid #000;
+            border-bottom: 3px solid #000;
+            transform: rotate(45deg);
+            opacity: 0.3;
+            box-sizing: border-box;
+            animation: arrowMove 1s ease-in-out infinite;
+        }
+
+        .arrow:nth-child(2) { animation-delay: 0.12s; }
+        .arrow:nth-child(3) { animation-delay: 0.24s; }
+
+        @keyframes arrowMove {
+            0%   { transform: translateY(0) rotate(45deg); opacity: 0.25; }
+            50%  { transform: translateY(8px) rotate(45deg); opacity: 1; }
+            100% { transform: translateY(0) rotate(45deg); opacity: 0.25; }
+        }
     </style>
 </head>
 <body>
 
+    <div class="arrow-container" aria-hidden="true">
+        <div class="arrow"></div>
+        <div class="arrow"></div>
+        <div class="arrow"></div>
+    </div>
+
     <div id="instruction-screen" class="container">
         <div style="text-align:center;margin-bottom:18px;">
-            <img src="bibly.png" alt="Bibly" style="max-width:180px;width:40%;height:auto;display:block;margin:0 auto;">
+            <img src="bibly.png" alt="Bibly" style="max-width:360px;width:50%;height:auto;display:block;margin:0 auto;">
         </div>
         <h1>Pour accéder au lien, suis ces deux étapes simples :</h1>
 
