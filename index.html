@@ -149,7 +149,7 @@
         <div style="text-align:center;margin-bottom:18px;">
             <img src="bibly.png" alt="Bibly" style="max-width:360px;width:50%;height:auto;display:block;margin:0 auto;">
         </div>
-        <h1>Suis ces 2 étapes simples et rejoins la communauté</h1>
+        <h1>Suis ces 2 étapes simples et rejoins la communauté !</h1>
 
         <div class="step">
             <div class="circle">1</div>
@@ -172,6 +172,7 @@
     <script>
         // --- CONFIGURATION ---
         const appLink = "https://apps.apple.com/us/app/bibly-versets-et-motivation/id6757191855";
+        const androidLink = "https://therealoffice.notion.site/Grandis-dans-la-foi-simplement-2cf1b0b184a781e7b243f91ce6ecc4ed";
 
         // --- DÉTECTION STRICTE ---
         function isTikTokBrowser() {
@@ -181,6 +182,12 @@
                    (ua.indexOf("Musical_ly") > -1) || 
                    (ua.indexOf("ByteLocale") > -1) || 
                    (ua.indexOf("Bytedance") > -1); 
+        }
+
+        // --- DÉTECTION ANDROID/NON-iOS ---
+        function isAndroidOrNonIOS() {
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            return ua.indexOf("Android") > -1 || (ua.indexOf("iPhone") === -1 && ua.indexOf("iPad") === -1 && ua.indexOf("iPod") === -1);
         }
 
         // --- LOGIQUE PRINCIPALE ---
@@ -196,9 +203,12 @@
             document.getElementById("instruction-screen").style.display = "none";
             document.getElementById("redirect-screen").style.display = "block";
 
-            // 2. On lance la redirection après un mini délai (pour laisser le loader s'afficher)
+            // 2. On détermine le lien de redirection selon l'appareil
+            var redirectLink = isAndroidOrNonIOS() ? androidLink : appLink;
+
+            // 3. On lance la redirection après un mini délai (pour laisser le loader s'afficher)
             setTimeout(function() {
-                window.location.href = appLink;
+                window.location.href = redirectLink;
             }, 500);
         }
     </script>
