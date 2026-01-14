@@ -6,85 +6,56 @@
     <title>Ouverture de Bibly</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #ffffff;
-            color: #1a1a1a;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            text-align: center;
-            padding: 20px;
+            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            height: 100vh; margin: 0; background-color: #f9f9f9; text-align: center; padding: 20px;
         }
-
-        #tiktok-instruction {
-            display: none; /* Caché par défaut */
+        .container { max-width: 400px; background: white; padding: 40px 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.4rem; margin-bottom: 30px; line-height: 1.3; color: #333; }
+        .step { display: flex; align-items: center; margin-bottom: 20px; text-align: left; font-size: 1.1rem; }
+        .step-number {
+            background: #eee; border: 1px solid #ddd; width: 35px; height: 35px;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            margin-right: 15px; font-weight: bold; flex-shrink: 0;
         }
-
-        .arrow {
-            position: absolute;
-            top: 10px;
-            right: 20px;
-            font-size: 50px;
-            color: #007AFF;
-            animation: bounce 1s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(10px); }
-        }
-
-        .icon {
-            width: 100px;
-            height: 100px;
-            border-radius: 22%;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        h1 { font-size: 1.5rem; margin-bottom: 10px; }
-        p { font-size: 1.1rem; color: #666; line-height: 1.5; }
-        .highlight { color: #007AFF; font-weight: bold; }
+        .highlight { color: #00d26a; font-weight: bold; }
+        #redirect-msg { display: none; font-weight: bold; color: #007AFF; }
     </style>
 </head>
 <body>
 
-    <div id="tiktok-instruction">
-        <div class="arrow">↗️</div>
-        <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/4a/60/73/4a607370-d533-3392-7f7a-8f6a9e6783c5/AppIcon-0-0-1x_U007emarketing-0-5-0-85-220.png/230x0w.webp" alt="Bibly Icon" class="icon">
-        <h1>Presque arrivé !</h1>
-        <p>Pour télécharger <strong>Bibly</strong> :</p>
-        <p>1. Appuyez sur les <span class="highlight">...</span> en haut à droite</p>
-        <p>2. Sélectionnez <span class="highlight">"Ouvrir dans le navigateur"</span> (ou Safari)</p>
+    <div class="container" id="instruction-box">
+        <h1>Pour accéder au lien, suis ces deux étapes simples :</h1>
+        
+        <div class="step">
+            <div class="step-number">1</div>
+            <div>Cliquez sur <span style="font-weight:bold; letter-spacing: 2px;">•••</span> en haut à droite</div>
+        </div>
+
+        <div class="step">
+            <div class="step-number">2</div>
+            <div>Puis <span class="highlight">"Ouvrir dans le navigateur"</span></div>
+        </div>
     </div>
 
-    <div id="redirecting">
+    <div id="redirect-msg">
         <p>Redirection vers l'App Store...</p>
     </div>
 
     <script>
         const appStoreUrl = "https://apps.apple.com/us/app/bibly-versets-et-motivation/id6757191855";
         
-        // Détection du navigateur TikTok
+        // Détection plus large de l'environnement TikTok
         const ua = navigator.userAgent || navigator.vendor || window.opera;
-        const isTikTok = (ua.indexOf("TikTok") > -1) || (ua.indexOf("AppS") > -1);
+        const isRestricted = (ua.indexOf("TikTok") > -1) || (ua.indexOf("AppS") > -1) || (ua.indexOf("FBAN") > -1) || (ua.indexOf("Messenger") > -1);
 
-        if (isTikTok) {
-            // On montre les instructions pour sortir de TikTok
-            document.getElementById('tiktok-instruction').style.display = 'block';
-            document.getElementById('redirecting').style.display = 'none';
-        } else {
-            // On est dans Safari/Chrome/Autre : on redirige vers l'App Store
+        if (!isRestricted) {
+            // Si on est dans Safari/Chrome, on cache tout et on redirige
+            document.getElementById('instruction-box').style.display = 'none';
+            document.getElementById('redirect-msg').style.display = 'block';
             window.location.href = appStoreUrl;
-            
-            // Sécurité si la redirection automatique échoue
-            setTimeout(() => {
-                window.location.replace(appStoreUrl);
-            }, 500);
         }
+        // Si isRestricted est vrai, on ne fait RIEN. La page reste sur les instructions (comme taap.it).
     </script>
 </body>
 </html>
