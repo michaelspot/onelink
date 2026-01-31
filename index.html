@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bibly</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #ffffff;
+            color: #191a14;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        /* --- Design Copié de Taap.it --- */
+        .container {
+            max-width: 100%;
+            width: 100%;
+            text-align: left;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 40px;
+            line-height: 1.3;
+            text-align: center;
+            color: #191a14;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 17px;
+            font-weight: 500;
+            color: #191a14;
+        }
+
+        .circle {
+            min-width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid #191a14;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-weight: 600;
+            font-size: 15px;
+            color: #191a14;
+        }
+
+        .dots {
+            font-weight: 900;
+            letter-spacing: 2px;
+            font-size: 18px;
+            color: #191a14;
+        }
+
+        .green-text {
+            color: #191a14;
+            font-weight: 700;
+        }
+
+        /* --- Loader de redirection (Caché par défaut) --- */
+        #redirect-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #191a14;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
+        .footer {
+            margin-top: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #191a14;
+        }
+
+        #redirect-screen p {
+            color: #191a14;
+        }
+
+        /* --- Flèches animées en haut à droite (chevrons pointant vers le haut) --- */
+        .arrow-container {
+            position: fixed;
+            top: 8px;
+            right: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: -8px;
+            align-items: center;
+            z-index: 1200;
+            pointer-events: none;
+        }
+
+        .arrow {
+            width: 44px;
+            height: 44px;
+            display: block;
+            opacity: 0.35;
+            animation: arrowMove 0.9s ease-in-out infinite;
+        }
+
+        .arrow:nth-child(2) { animation-delay: 0.12s; }
+        .arrow:nth-child(3) { animation-delay: 0.24s; }
+
+        @keyframes arrowMove {
+            0%   { transform: translateY(0); opacity: 0.25; }
+            50%  { transform: translateY(-8px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0.25; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="arrow-container" aria-hidden="true">
+        <svg class="arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 15l6-6 6 6" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg class="arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 15l6-6 6 6" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <svg class="arrow" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 15l6-6 6 6" stroke="#000" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <div id="instruction-screen" class="container">
+        <div style="text-align:center;margin-bottom:18px;">
+            <img src="bibly.png" alt="Bibly" style="max-width:360px;width:50%;height:auto;display:block;margin:0 auto;">
+        </div>
+        <h1>Suis ces 2 étapes simples et rejoins la communauté !</h1>
+
+        <div class="step">
+            <div class="circle">1</div>
+            <div>Cliquez sur <span class="dots">•••</span> en haut à droite</div>
+        </div>
+
+        <div class="step">
+            <div class="circle">2</div>
+            <div>Puis <span class="green-text">"Ouvrir dans le navigateur"</span></div>
+        </div>
+        
+        
+    </div>
+
+    <div id="redirect-screen">
+        <div class="spinner"></div>
+        <p>Ouverture de l'App Store...</p>
+    </div>
+
+    <script>
+        // =====================================================
+        // CONFIGURATION APPSFLYER
+        // =====================================================
+        // Remplacez ces valeurs par vos paramètres AppsFlyer
+        var AF_APP_ID = "id6757191855";           // Votre App Store ID
+        var AF_MEDIA_SOURCE = "biblack";           // Source (pid) - nom de votre lien/source
+        var AF_CAMPAIGN = "tiktok";                // Nom de campagne par défaut
+        var AF_CHANNEL = "tiktok";                 // Canal par défaut
+
+        // =====================================================
+        // CONFIGURATION LIENS
+        // =====================================================
+        var APP_STORE_URL = "https://apps.apple.com/us/app/bibly-versets-et-motivation/id6757191855";
+        var androidLink = "https://therealoffice.notion.site/Grandis-dans-la-foi-simplement-2cf1b0b184a781e7b243f91ce6ecc4ed";
+
+        // =====================================================
+        // CAPTURE DYNAMIQUE DES PARAMÈTRES URL
+        // Permet de personnaliser le tracking par campagne via l'URL :
+        //   ex: votrelien.com?c=campagne_janvier&af_adset=audience1
+        // =====================================================
+        function getParam(name) {
+            try { return new URLSearchParams(window.location.search).get(name); }
+            catch(e) { return null; }
+        }
+
+        var pid = getParam("pid") || getParam("utm_source") || AF_MEDIA_SOURCE;
+        var campaign = getParam("c") || getParam("utm_campaign") || AF_CAMPAIGN;
+        var channel = getParam("af_channel") || getParam("utm_source") || AF_CHANNEL;
+        var adset = getParam("af_adset") || getParam("utm_medium") || "";
+        var ad = getParam("af_ad") || getParam("utm_content") || "";
+        var sub1 = getParam("af_sub1") || "";
+
+        // =====================================================
+        // CONSTRUCTION DU LIEN D'ATTRIBUTION APPSFLYER
+        // Ce lien enregistre le clic dans AppsFlyer puis
+        // redirige automatiquement vers l'App Store
+        // =====================================================
+        var afParams = "pid=" + encodeURIComponent(pid)
+            + "&c=" + encodeURIComponent(campaign)
+            + "&af_channel=" + encodeURIComponent(channel)
+            + "&af_r=" + encodeURIComponent(APP_STORE_URL);
+        if (adset) afParams += "&af_adset=" + encodeURIComponent(adset);
+        if (ad) afParams += "&af_ad=" + encodeURIComponent(ad);
+        if (sub1) afParams += "&af_sub1=" + encodeURIComponent(sub1);
+
+        var appLink = "https://app.appsflyer.com/" + AF_APP_ID + "?" + afParams;
+
+        // =====================================================
+        // TRACKING IMPRESSION (view-through attribution)
+        // Se déclenche à chaque visite de la page, même dans TikTok.
+        // Permet de mesurer le nombre total de vues du lien.
+        // =====================================================
+        (function() {
+            try {
+                var img = new Image(1, 1);
+                img.src = "https://impression.appsflyer.com/" + AF_APP_ID + "?" + afParams;
+            } catch(e) {}
+        })();
+
+        // --- DÉTECTION STRICTE ---
+        function isTikTokBrowser() {
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            return (ua.indexOf("TikTok") > -1) ||
+                   (ua.indexOf("Musical_ly") > -1) ||
+                   (ua.indexOf("ByteLocale") > -1) ||
+                   (ua.indexOf("Bytedance") > -1);
+        }
+
+        // --- DÉTECTION ANDROID/NON-iOS ---
+        function isAndroidOrNonIOS() {
+            var ua = navigator.userAgent || navigator.vendor || window.opera;
+            return ua.indexOf("Android") > -1 || (ua.indexOf("iPhone") === -1 && ua.indexOf("iPad") === -1 && ua.indexOf("iPod") === -1);
+        }
+
+        // --- LOGIQUE PRINCIPALE ---
+        if (isTikTokBrowser()) {
+            // CAS 1 : On est DANS TikTok.
+            // ON NE FAIT RIEN. L'impression AppsFlyer a déjà été envoyée ci-dessus.
+            console.log("TikTok détecté : Redirection bloquée. Impression AppsFlyer envoyée.");
+        } else {
+            // CAS 2 : On est dans Safari / Chrome (l'utilisateur a suivi les instructions).
+
+            // 1. On change l'affichage
+            document.getElementById("instruction-screen").style.display = "none";
+            document.getElementById("redirect-screen").style.display = "block";
+
+            // 2. On détermine le lien de redirection selon l'appareil
+            // iOS → lien AppsFlyer (enregistre le clic + redirige vers App Store)
+            // Android → lien Notion (pas de tracking AppsFlyer)
+            var redirectLink = isAndroidOrNonIOS() ? androidLink : appLink;
+
+            // 3. On lance la redirection après un mini délai
+            setTimeout(function() {
+                window.location.href = redirectLink;
+            }, 500);
+        }
+    </script>
+
+</body>
+</html>
