@@ -182,7 +182,7 @@
         // CONFIGURATION LIENS
         // =====================================================
         var APP_STORE_URL = "https://apps.apple.com/us/app/bibly-versets-et-motivation/id6757191855";
-        var androidLink = "https://therealoffice.notion.site/Grandis-dans-la-foi-simplement-2cf1b0b184a781e7b243f91ce6ecc4ed";
+        var fallbackLink = "https://biblyapp.fr";
 
         // =====================================================
         // CAPTURE DYNAMIQUE DES PARAMÈTRES URL
@@ -258,7 +258,7 @@
             // 2. On détermine le lien de redirection selon l'appareil
             // iOS → lien AppsFlyer (enregistre le clic + redirige vers App Store)
             // Android → lien Notion (pas de tracking AppsFlyer)
-            var redirectLink = isAndroidOrNonIOS() ? androidLink : appLink;
+            var redirectLink = isAndroidOrNonIOS() ? fallbackLink : appLink;
 
             // 3. On lance la redirection après un mini délai
             setTimeout(function() {
